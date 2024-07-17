@@ -120,6 +120,8 @@ class HttpProxyChannelHandler extends ChannelHandler<HttpRequest> {
       }
 
       var uri = '${httpRequest.remoteDomain()}${httpRequest.path()}';
+      log.d("Find Something $uri");
+      /// TODO 在这里进行内容的转发与替换
       //脚本替换
       var scriptManager = await ScriptManager.instance;
       HttpRequest? request = await scriptManager.runScript(httpRequest);
@@ -221,6 +223,7 @@ class HttpProxyChannelHandler extends ChannelHandler<HttpRequest> {
   }
 }
 
+/// TODO 似乎是最终需要修改的地方
 /// http响应代理
 class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
   //客户端的连接
@@ -235,14 +238,15 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
   void channelRead(ChannelContext channelContext, Channel channel, HttpResponse msg) async {
     var request = channelContext.currentRequest;
     request?.response = msg;
-
+    /// 再这里可以捕获 Response
+    log.d("返回：$msg");
     //域名是否过滤
     if (HostFilter.filter(request?.hostAndPort?.host) || request?.method == HttpMethod.connect) {
       await clientChannel.write(msg);
       return;
     }
 
-    // log.i("[${clientChannel.id}] Response $msg");
+    log.i("[${clientChannel.id}] Response $msg");
     //脚本替换
     var scriptManager = await ScriptManager.instance;
     try {
