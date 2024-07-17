@@ -55,8 +55,7 @@ class AiHandler {
   }
 
   bool isUrlInWhitelist(String url) {
-    print("白名单是：$whitelist");
-
+    // print("白名单：$whitelist");
     for (String entry in whitelist) {
       if (url.contains(entry)) {
         return true;

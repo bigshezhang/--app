@@ -2,6 +2,7 @@
   "whitelist": [
     "https://example.com",
     "https://api.siliconflow.cn",
-    "https://ios.sspai.com/post"
+    "https://ios.sspai.com/post",
+    "https://edith.xiaohongshu.com/api/sns/v1/note/imagefeed"
   ]
 }

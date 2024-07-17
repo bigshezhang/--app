@@ -239,14 +239,16 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
   void channelRead(ChannelContext channelContext, Channel channel, HttpResponse msg) async {
     var request = channelContext.currentRequest;
     request?.response = msg;
-    /// TODO 再这里可以捕获 Response
+    /// TODO 这里可以捕获 Response
     var uri = '${request?.remoteDomain()}${request?.path()}';
     //log.d("返回：$msg");
 
     final aiHandler = AiHandler();
 
     bool isInWhitelist = aiHandler.isUrlInWhitelist(uri);
-    print('$uri 是否在白名单中: $isInWhitelist');
+    if (isInWhitelist){
+      print("发现文章：${msg.bodyAsString}");
+    }
 
     //域名是否过滤
     if (HostFilter.filter(request?.hostAndPort?.host) || request?.method == HttpMethod.connect) {

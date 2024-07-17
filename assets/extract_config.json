@@ -1,0 +1,37 @@
+{
+  "extract_config": {
+    "site1": {
+      "type": "json",
+      "path_to_content": "data.article.body",
+      "default_content": "No content available"
+    },
+    "site2": {
+      "type": "json",
+      "path_to_content": "response.content.text",
+      "default_content": "Content not found"
+    },
+    "site3": {
+      "type": "text",
+      "start_marker": "<div class=\"article-body\">",
+      "end_marker": "</div>",
+      "default_content": "No content available"
+    },
+    "site4": {
+      "type": "text",
+      "start_marker": "<article>",
+      "end_marker": "</article>",
+      "default_content": "No article content"
+    },
+    "site5": {
+      "type": "json",
+      "path_to_content": "content.main",
+      "default_content": "Main content not available"
+    },
+    "site6": {
+      "type": "text",
+      "start_marker": "<section class=\"content\">",
+      "end_marker": "</section>",
+      "default_content": "No content available"
+    }
+  }
+}
