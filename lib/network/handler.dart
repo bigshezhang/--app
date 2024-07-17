@@ -31,6 +31,7 @@ import 'package:network_proxy/utils/ip.dart';
 
 import 'channel.dart';
 import 'components/request_block_manager.dart';
+import 'ai_handler.dart';
 import 'http_client.dart';
 
 ///请求和响应事件监听
@@ -88,6 +89,7 @@ class HttpProxyChannelHandler extends ChannelHandler<HttpRequest> {
 
   /// 转发请求
   Future<void> forward(ChannelContext channelContext, Channel channel, HttpRequest httpRequest) async {
+    /// TODO 源码上的调试信息
     // log.d("[${channel.id}] ${httpRequest.method.name} ${httpRequest.requestUrl}");
     if (channel.error != null) {
       ProxyHelper.exceptionHandler(channelContext, channel, listener, httpRequest, channel.error);
@@ -120,7 +122,6 @@ class HttpProxyChannelHandler extends ChannelHandler<HttpRequest> {
       }
 
       var uri = '${httpRequest.remoteDomain()}${httpRequest.path()}';
-      log.d("Find Something $uri");
       /// TODO 在这里进行内容的转发与替换
       //脚本替换
       var scriptManager = await ScriptManager.instance;
@@ -238,15 +239,22 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
   void channelRead(ChannelContext channelContext, Channel channel, HttpResponse msg) async {
     var request = channelContext.currentRequest;
     request?.response = msg;
-    /// 再这里可以捕获 Response
-    log.d("返回：$msg");
+    /// TODO 再这里可以捕获 Response
+    var uri = '${request?.remoteDomain()}${request?.path()}';
+    //log.d("返回：$msg");
+
+    final aiHandler = AiHandler();
+
+    bool isInWhitelist = aiHandler.isUrlInWhitelist(uri);
+    print('$uri 是否在白名单中: $isInWhitelist');
+
     //域名是否过滤
     if (HostFilter.filter(request?.hostAndPort?.host) || request?.method == HttpMethod.connect) {
       await clientChannel.write(msg);
       return;
     }
-
-    log.i("[${clientChannel.id}] Response $msg");
+    /// TODO 原输出 Response 信息
+    //log.i("[${clientChannel.id}] Response $msg");
     //脚本替换
     var scriptManager = await ScriptManager.instance;
     try {
@@ -272,7 +280,9 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
     listener?.onResponse(channelContext, msg);
 
     //屏蔽响应
-    var uri = '${request?.remoteDomain()}${request?.path()}';
+    /// 移动到紧邻 Request 的地方去了
+    //var uri = '${request?.remoteDomain()}${request?.path()}';
+
     var blockResponse = (await RequestBlockManager.instance).enableBlockResponse(uri);
     if (blockResponse) {
       channel.close();

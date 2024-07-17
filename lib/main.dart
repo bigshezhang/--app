@@ -14,7 +14,16 @@ import 'package:network_proxy/utils/navigator.dart';
 import 'package:network_proxy/utils/platform.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'network/ai_handler.dart';
+
 void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final aiHandler = AiHandler();
+
+  // 等待白名单加载完成
+  await Future.delayed(const Duration(milliseconds: 500));
+
   WidgetsFlutterBinding.ensureInitialized();
 
   var instance = AppConfiguration.instance;

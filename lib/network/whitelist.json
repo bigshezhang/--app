@@ -1,0 +1,7 @@
+{
+  "whitelist": [
+    "https://example.com",
+    "https://api.siliconflow.cn",
+    "https://ios.sspai.com/post"
+  ]
+}

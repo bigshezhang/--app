@@ -55,3 +55,4 @@ flutter:
     - assets/certs/ca.crt
     - assets/certs/ca_private.der
     - assets/icon.png
+    - assets/whitelist.json
