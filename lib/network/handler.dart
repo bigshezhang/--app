@@ -238,6 +238,7 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
 
   @override
   void channelRead(ChannelContext channelContext, Channel channel, HttpResponse msg) async {
+    /// 定义文章信息字典（标题、内容等）
     var request = channelContext.currentRequest;
     request?.response = msg;
     /// TODO 这里可以捕获 Response
@@ -248,7 +249,7 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
     final extractContentHandler = ExtractContentHandler();
     String? matchedURI = aiHandler.checkUrlInWhitelist(uri);
     if (matchedURI != null){
-      extractContentHandler.extractContent(matchedURI, msg.bodyAsString);
+      aiHandler.summarizeHandler(matchedURI, msg.bodyAsString);
     }
 
     //域名是否过滤

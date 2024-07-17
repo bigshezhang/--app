@@ -13,7 +13,7 @@
     "https://ios.sspai.com/post/": {
       "type": "text",
       "start_marker": "#articleWidth-content",
-      "end_marker": "</div>",
+      "prompt": "请总结以下文章内容，但忽略与 Matrix 和少数派相关的内容：",
       "default_content": "No content available"
     },
     "site4": {

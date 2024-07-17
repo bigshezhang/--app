@@ -18,18 +18,19 @@ class ExtractContentHandler{
 
   ExtractContentHandler._internal();
 
-  void extractContent(String matchedURI, String msg){
+  Future<Map> extractContent(String matchedURI, String msg) async {
     var selfExtractConfig = extractConfig[matchedURI];
     print("策略是：$selfExtractConfig");
     switch (selfExtractConfig["type"]) {
       case 'text':
-        extractHTMLContent(selfExtractConfig, msg);
+        return extractHTMLContent(selfExtractConfig, msg);
       default:
-        print('错误，我什么都没找到');
+        /// FIXME 解决这个可能为空的返回
+        return extractHTMLContent(selfExtractConfig, msg);
     }
   }
 
-  Future<String?> extractHTMLContent(Map selfExtractConfig, String msg) async {
+  Future<Map> extractHTMLContent(Map selfExtractConfig, String msg) async {
     print("开始 HTML 提取");
     final extractedTitle;
     final extractedContent;
@@ -48,10 +49,13 @@ class ExtractContentHandler{
     } else {
       extractedTitle = 'No title found';
     }
-
     extractedContent = bestElemReadability.text;
-    print("标题：$extractedTitle");
-    print("正文： $extractedContent");
+
+    Map articleInfo = {"title" : extractedTitle, "content" : extractedContent};
+    articleInfo["prompt"] = selfExtractConfig["prompt"];
+    // print("标题：$extractedTitle");
+    // print("正文： $extractedContent");
+    return articleInfo;
   }
 
   void _loadExtractConfig(String filePath) async {

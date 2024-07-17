@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:network_proxy/network/extract_content_handler.dart';
 
 class AiHandler {
   final String apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
@@ -17,9 +18,8 @@ class AiHandler {
   }
 
   AiHandler._internal();
+  final extractContentHandler = ExtractContentHandler();
 
-  late String _apiUrl;
-  late String _apiToken;
 
   void _loadWhitelist(String filePath) async {
     final jsonString = await rootBundle.loadString(filePath);
@@ -27,20 +27,29 @@ class AiHandler {
     whitelist = List<String>.from(jsonData['whitelist']);
   }
 
-  Future<String> summarizeText(String inputText) async {
+  /// 对未处理 response 进行提取并总结
+  void summarizeHandler(String matchedURI, String msg) async {
+    Map articleInfo = {};
+    articleInfo = await extractContentHandler.extractContent(matchedURI, msg);
+    articleInfo["summarizedContent"] = await summarizeText(articleInfo['content'], articleInfo["prompt"]);
+    print(articleInfo["summarizedContent"]);
+  }
+  
+  /// 对文字进行总结的执行器
+  Future<String> summarizeText(String inputText, String prompt) async {
     final response = await http.post(
-      Uri.parse(_apiUrl),
+      Uri.parse(apiUrl),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $_apiToken',
+        'Authorization': 'Bearer $apiToken',
       },
       body: jsonEncode({
         'model': 'deepseek-ai/DeepSeek-V2-Chat',
         'messages': [
           {
             'role': 'user',
-            'content': '请总结以下内容：$inputText',
+            'content': '$prompt\n$inputText',
           },
         ],
       }),
