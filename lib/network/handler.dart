@@ -20,6 +20,7 @@ import 'dart:typed_data';
 import 'package:network_proxy/network/components/host_filter.dart';
 import 'package:network_proxy/network/components/request_rewrite_manager.dart';
 import 'package:network_proxy/network/components/script_manager.dart';
+import 'package:network_proxy/network/extract_content_handler.dart';
 import 'package:network_proxy/network/host_port.dart';
 import 'package:network_proxy/network/http/http.dart';
 import 'package:network_proxy/network/http/websocket.dart';
@@ -244,10 +245,10 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
     //log.d("返回：$msg");
 
     final aiHandler = AiHandler();
-
-    bool isInWhitelist = aiHandler.isUrlInWhitelist(uri);
-    if (isInWhitelist){
-      print("发现文章：${msg.bodyAsString}");
+    final extractContentHandler = ExtractContentHandler();
+    String? matchedURI = aiHandler.checkUrlInWhitelist(uri);
+    if (matchedURI != null){
+      extractContentHandler.extractContent(matchedURI, msg.bodyAsString);
     }
 
     //域名是否过滤

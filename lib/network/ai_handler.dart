@@ -11,8 +11,8 @@ class AiHandler {
 
   static final AiHandler _instance = AiHandler._internal();
 
-  factory AiHandler({String whitelistFilePath = 'assets/whitelist.json'}) {
-    _instance._loadWhitelist(whitelistFilePath);
+  factory AiHandler() {
+    _instance._loadWhitelist('assets/whitelist.json');
     return _instance;
   }
 
@@ -54,13 +54,12 @@ class AiHandler {
     }
   }
 
-  bool isUrlInWhitelist(String url) {
-    // print("白名单：$whitelist");
+  String? checkUrlInWhitelist(String url) {
     for (String entry in whitelist) {
       if (url.contains(entry)) {
-        return true;
+        return entry;
       }
     }
-    return false;
+    return null;
   }
 }

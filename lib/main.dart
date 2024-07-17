@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:network_proxy/network/bin/configuration.dart';
+import 'package:network_proxy/network/extract_content_handler.dart';
 import 'package:network_proxy/ui/component/chinese_font.dart';
 import 'package:network_proxy/ui/component/multi_window.dart';
 import 'package:network_proxy/ui/configuration.dart';
@@ -20,7 +21,7 @@ void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final aiHandler = AiHandler();
-
+  final extractContentHandler = ExtractContentHandler();
   // 等待白名单加载完成
   await Future.delayed(const Duration(milliseconds: 500));
 

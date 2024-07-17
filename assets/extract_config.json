@@ -10,9 +10,9 @@
       "path_to_content": "response.content.text",
       "default_content": "Content not found"
     },
-    "site3": {
+    "https://ios.sspai.com/post/": {
       "type": "text",
-      "start_marker": "<div class=\"article-body\">",
+      "start_marker": "#articleWidth-content",
       "end_marker": "</div>",
       "default_content": "No content available"
     },
