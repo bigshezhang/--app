@@ -29,7 +29,7 @@ class Configuration {
   int port = 9099;
 
   //是否启用https抓包
-  bool enableSsl = false;
+  bool enableSsl = true;
 
   //是否设置系统代理
   bool enableSystemProxy = true;
@@ -58,18 +58,17 @@ class Configuration {
   int historyCacheTime = 0;
 
   //默认是否启动
-  bool startup = false;
+  bool startup = true;
 
   Configuration._();
 
   /// 单例
   static Configuration? _instance;
 
-  static Future<Configuration> get instance async {
+  static Configuration get instance {
     if (_instance == null) {
       try {
-        var loadConfig = await _loadConfig();
-        _instance = Configuration.fromJson(loadConfig);
+        _instance = Configuration._();
       } catch (e) {
         logger.e('初始化配置失败', error: e, stackTrace: StackTrace.current);
         _instance = Configuration._();

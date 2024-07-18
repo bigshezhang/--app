@@ -13,8 +13,11 @@ import 'package:network_proxy/ui/desktop/window_listener.dart';
 import 'package:network_proxy/ui/mobile/mobile.dart';
 import 'package:network_proxy/utils/navigator.dart';
 import 'package:network_proxy/utils/platform.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'controller/article_notifier.dart';
+import 'controller/proxy_server_provider.dart';
 import 'network/ai_handler.dart';
 
 void main(List<String> args) async {
@@ -40,7 +43,21 @@ void main(List<String> args) async {
   //移动端
   if (Platforms.isMobile()) {
     var appConfiguration = await instance;
-    runApp(FluentApp(MobileHomePage((await configuration), appConfiguration), appConfiguration));
+    runApp(
+      MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => ArticleNotifier(),
+            ),
+            ChangeNotifierProvider(
+                create: (context) => ProxyServerProvider()
+            ),
+          ],
+          child: FluentApp(MobileHomePage((await configuration), appConfiguration), appConfiguration),
+
+  )
+
+    );
     return;
   }
 
@@ -79,6 +96,7 @@ class FluentApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ProxyServerProvider>(context);
     var light = lightTheme();
     var darkTheme = config(ThemeData.dark(useMaterial3: false));
 

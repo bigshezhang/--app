@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:network_proxy/model/article_model.dart';
 import 'package:network_proxy/network/extract_content_handler.dart';
+import 'package:uuid/uuid.dart';
 
 import '../native/pip.dart';
+import '../controller/database_helper.dart';
 
 class AiHandler {
   final String apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
@@ -35,6 +39,15 @@ class AiHandler {
     articleInfo = await extractContentHandler.extractContent(matchedURI, msg);
     articleInfo["summarizedContent"] = await summarizeText(articleInfo['content'], articleInfo["prompt"]);
     print(articleInfo["summarizedContent"]);
+    var article_object = Article(
+        title: articleInfo["title"],
+        content: articleInfo["content"],
+        prompt: articleInfo["prompt"],
+        summarizedContent: articleInfo["summarizedContent"],
+        timestamp: DateTime.now().toString());
+
+    await DatabaseHelper.instance.create(article_object);
+
     PictureInPicture.changeData(articleInfo["summarizedContent"]);
   }
   

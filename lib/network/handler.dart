@@ -35,6 +35,7 @@ import 'channel.dart';
 import 'components/request_block_manager.dart';
 import 'ai_handler.dart';
 import 'http_client.dart';
+import 'package:flutter/material.dart';
 
 ///请求和响应事件监听
 abstract class EventListener {

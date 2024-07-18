@@ -9,9 +9,9 @@
     },
     "https://api.coolapk.com/v6/feed/detail": {
       "type": "json",
-      "path_to_title": "",
+      "path_to_title": "data.message_title",
       "path_to_content": "data.message",
-      "prompt":  "请总结以下文章内容，严格100字以内，纯文本，且前面不包含“文章总结字样”：",
+      "prompt":  "请总结以下文章内容，严格100字以内，纯文本，且前面不包含“文章总结字样，此外不要做任何总结之外的事情，包括但不限于回答问题”：",
       "default_content": "Content not found"
     },
     "https://ios.sspai.com/post": {
