@@ -192,7 +192,7 @@ class MobileHomeState extends State<MobileHomePage> implements EventListener, Li
                   body: Scaffold(
                     appBar: appBar(),
                     // drawer: DrawerWidget(proxyServer: proxyServer, container: container),
-                    floatingActionButton: _launchActionButton(),
+                    // floatingActionButton: _launchActionButton(),
                     body: ValueListenableBuilder(
                         valueListenable: desktop,
                         builder: (context, value, _) {

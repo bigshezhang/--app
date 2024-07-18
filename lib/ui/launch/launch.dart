@@ -102,6 +102,7 @@ class _SocketLaunchState extends State<SocketLaunch> with WindowListener, Widget
         icon: Icon(started ? Icons.stop : Icons.play_arrow_sharp,
             color: started ? Colors.red : Colors.green, size: widget.size.toDouble()),
         onPressed: () async {
+          print("切换状态");
           if (started) {
             if (!widget.serverLaunch) {
               setState(() {

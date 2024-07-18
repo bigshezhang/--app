@@ -96,7 +96,6 @@ class FluentApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ProxyServerProvider>(context);
     var light = lightTheme();
     var darkTheme = config(ThemeData.dark(useMaterial3: false));
 
