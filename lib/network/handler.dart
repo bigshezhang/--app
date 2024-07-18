@@ -253,7 +253,7 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
     if (matchedURI != null){
       print("发现目标文章，进行解析总结中");
       PictureInPicture.changeData("总结中...");
-      aiHandler.summarizeHandler(matchedURI, msg.bodyAsString);
+      aiHandler.summarizeHandler(matchedURI, msg.bodyAsString, uri);
     }
 
     //域名是否过滤

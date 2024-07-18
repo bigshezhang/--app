@@ -11,8 +11,6 @@ import '../native/pip.dart';
 import '../controller/database_helper.dart';
 
 class AiHandler {
-  final String apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
-  final String apiToken = 'sk-zzmsmzaecxwpucyffoqpgkqohxxcqdhcislcgyvappxdrujq';
   final whitelistFilePath = 'assets/whitelist.json';
   late List<String> whitelist;
 
@@ -34,9 +32,9 @@ class AiHandler {
   }
 
   /// 对未处理 response 进行提取并总结
-  void summarizeHandler(String matchedURI, String msg) async {
+  void summarizeHandler(String matchedURI, String msg, String sourceURL) async {
     Map articleInfo = {};
-    articleInfo = await extractContentHandler.extractContent(matchedURI, msg);
+    articleInfo = await extractContentHandler.extractContent(matchedURI, msg, sourceURL);
     articleInfo["summarizedContent"] = await summarizeText(articleInfo['content'], articleInfo["prompt"]);
     print(articleInfo["summarizedContent"]);
     var article_object = Article(
@@ -44,7 +42,10 @@ class AiHandler {
         content: articleInfo["content"],
         prompt: articleInfo["prompt"],
         summarizedContent: articleInfo["summarizedContent"],
-        timestamp: DateTime.now().toString());
+        timestamp: DateTime.now().toString(),
+        type: articleInfo["type"],
+        sourceURL: articleInfo["sourceURL"],
+        html: articleInfo["html"]);
 
     await DatabaseHelper.instance.create(article_object);
 
@@ -53,6 +54,8 @@ class AiHandler {
   
   /// 对文字进行总结的执行器
   Future<String> summarizeText(String inputText, String prompt) async {
+    final String apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
+    final String apiToken = 'sk-zzmsmzaecxwpucyffoqpgkqohxxcqdhcislcgyvappxdrujq';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {

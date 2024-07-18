@@ -19,18 +19,19 @@ class ArticleNotifier extends ChangeNotifier {
 
   void addArticle(Article article) {
     _articles.add(article);
-    if(_articles.length > 2){
-      _articles.removeAt(0);
-    }
+    /// 坏写法，已遗弃
+    // if(_articles.length > 2){
+    //   _articles.removeAt(0);
+    // }
     print("已通知更新");
     notifyListeners();
   }
 
   void setArticles(List<Article> articles) {
     _articles = articles;
-    if(_articles.length > 2){
-      _articles.removeAt(0);
-    }
+    // if(_articles.length > 2){
+    //   _articles.removeAt(0);
+    // }
     notifyListeners();
   }
 }

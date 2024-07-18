@@ -37,6 +37,9 @@ class DatabaseHelper {
     await db.execute('''
 CREATE TABLE articles (
   id $idType,
+  type $textType,
+  sourceURL $textType,
+  html $textType,
   title $textType,
   content $textType,
   prompt $textType,
@@ -46,7 +49,15 @@ CREATE TABLE articles (
 ''');
   }
 
-
+  Future<void> reinitializeDatabase() async {
+    await deleteDatabaseFile();
+    _database = await _initDB('articles.db');
+  }
+  Future<void> deleteDatabaseFile() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'articles.db');
+    await deleteDatabase(path);
+  }
   Future<Article?> create(Article article) async {
     final db = await instance.database;
 

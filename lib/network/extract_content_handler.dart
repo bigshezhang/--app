@@ -6,6 +6,7 @@ import 'package:html/parser.dart' as html_parser; // 导入 HTML 解析库
 import 'package:html/dom.dart'; // 导入 DOM 库
 import 'package:html_main_element/html_main_element.dart';
 import 'package:html/parser.dart' as html_parser;
+import 'package:network_proxy/network/util/plain_text_visitor.dart';
 
 class ExtractContentHandler{
   late Map extractConfig;
@@ -18,24 +19,24 @@ class ExtractContentHandler{
 
   ExtractContentHandler._internal();
 
-  Future<Map> extractContent(String matchedURI, String msg) async {
+  Future<Map> extractContent(String matchedURI, String msg, String sourceURL) async {
     var selfExtractConfig = extractConfig[matchedURI];
     print("策略是：$selfExtractConfig");
     switch (selfExtractConfig["type"]) {
       case 'text':
-        return extractHTMLContent(selfExtractConfig, msg);
+        return extractHTMLContent(selfExtractConfig, msg, sourceURL);
       case 'json':
-        return extractJSONContent(selfExtractConfig, msg);
+        return extractJSONContent(selfExtractConfig, msg, sourceURL);
       default:
         /// FIXME 解决这个可能为空的返回
-        return extractHTMLContent(selfExtractConfig, msg);
+        return extractHTMLContent(selfExtractConfig, msg, sourceURL);
     }
   }
 
-  Future<Map> extractHTMLContent(Map selfExtractConfig, String msg) async {
+  Future<Map> extractHTMLContent(Map selfExtractConfig, String msg, String sourceURL) async {
     print("开始 HTML 提取");
     final extractedTitle;
-    final extractedContent;
+    var extractedContent;
 
     final document = html_parser.parse(msg);
     // Genererate score map and get score for every html element
@@ -52,7 +53,16 @@ class ExtractContentHandler{
       extractedTitle = 'No title found';
     }
     extractedContent = bestElemReadability.text;
-
+    // extractedContent = (PlaintextVisitor()..visit(document)).toString();
+    print("文章：$extractedContent");
+    return {
+      "title": extractedTitle,
+      "type": selfExtractConfig['type'],
+      "sourceURL": sourceURL,
+      "html": bestElemReadability.innerHtml,
+      "content": extractedContent,
+      "prompt": selfExtractConfig["prompt"]
+    };
     Map articleInfo = {"title" : extractedTitle, "content" : extractedContent};
     articleInfo["prompt"] = selfExtractConfig["prompt"];
     // print("标题：$extractedTitle");
@@ -60,7 +70,7 @@ class ExtractContentHandler{
     return articleInfo;
   }
 
-  Future<Map<String, dynamic>> extractJSONContent(Map<String, dynamic> selfExtractConfig, String jsonResponse) async {
+  Future<Map<String, dynamic>> extractJSONContent(Map<String, dynamic> selfExtractConfig, String jsonResponse, String sourceURL) async {
     print("开始 JSON 提取");
 
     final pathToTitle = selfExtractConfig["path_to_title"] == "" ? "" : selfExtractConfig["path_to_title"].split('.');
@@ -126,6 +136,9 @@ class ExtractContentHandler{
     print("文章标题：$extractedTitle \n文章内容：$extractedContent");
     return {
       "title": extractedTitle,
+      "type": selfExtractConfig['type'],
+      "sourceURL": sourceURL,
+      "html": ' ',
       "content": extractedContent,
       "prompt": selfExtractConfig["prompt"]
     };
