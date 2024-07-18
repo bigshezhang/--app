@@ -9,7 +9,7 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 class DataSource: ObservableObject {
-    @Published var list: [String] = []
+    @Published var list: [String] = [" "]
     
     func clear() {
         list.removeAll()
@@ -26,16 +26,9 @@ struct PictureInPictureView: View {
         
             VStack(alignment: .leading, spacing: 1.3){
                 
-                ForEach((0..<dataSource.list.count).reversed(), id: \.self) {
-                    Text(dataSource.list[$0])
-                        .font(.system(size: 10))
-                        .lineLimit(2)
-                        
+                Text(dataSource.list[0])
+                    .font(.system(size:15))
                     
-                    Divider()
-                        .frame(maxHeight: 1.3)
-                }
-                
                
             }
             .padding(5)
@@ -45,8 +38,8 @@ struct PictureInPictureView: View {
         
     }
     
-        func addData(text: String) {
-            dataSource.list.append(text);
+        func changeData(text: String) {
+            dataSource.list[0] = text;
         }
 }
 //

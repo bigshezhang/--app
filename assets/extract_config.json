@@ -1,19 +1,22 @@
 {
   "extract_config": {
-    "site1": {
+    "https://edith.xiaohongshu.com/api/sns/v1/note/imagefeed": {
       "type": "json",
-      "path_to_content": "data.article.body",
-      "default_content": "No content available"
+      "path_to_title": "data[0].note_list[0].title",
+      "path_to_content": "data[0].note_list[0].desc",
+      "default_content": "No content available",
+      "prompt":  "请总结以下文章内容，严格100字以内，纯文本，且前面不包含“文章总结字样”："
     },
-    "site2": {
+    "https://api.coolapk.com/v6/feed/detail": {
       "type": "json",
-      "path_to_content": "response.content.text",
+      "path_to_title": "",
+      "path_to_content": "data.message",
+      "prompt":  "请总结以下文章内容，严格100字以内，纯文本，且前面不包含“文章总结字样”：",
       "default_content": "Content not found"
     },
-    "https://ios.sspai.com/post/": {
+    "https://ios.sspai.com/post": {
       "type": "text",
-      "start_marker": "#articleWidth-content",
-      "prompt": "请总结以下文章内容，但忽略与 Matrix 和少数派相关的内容：",
+      "prompt": "请总结以下文章内容，但忽略与 Matrix 和少数派相关的内容，严格100字以内，纯文本，且前面不包含“文章总结字样”：",
       "default_content": "No content available"
     },
     "site4": {

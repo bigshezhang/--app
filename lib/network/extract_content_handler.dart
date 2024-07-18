@@ -24,6 +24,8 @@ class ExtractContentHandler{
     switch (selfExtractConfig["type"]) {
       case 'text':
         return extractHTMLContent(selfExtractConfig, msg);
+      case 'json':
+        return extractJSONContent(selfExtractConfig, msg);
       default:
         /// FIXME 解决这个可能为空的返回
         return extractHTMLContent(selfExtractConfig, msg);
@@ -56,6 +58,77 @@ class ExtractContentHandler{
     // print("标题：$extractedTitle");
     // print("正文： $extractedContent");
     return articleInfo;
+  }
+
+  Future<Map<String, dynamic>> extractJSONContent(Map<String, dynamic> selfExtractConfig, String jsonResponse) async {
+    print("开始 JSON 提取");
+
+    final pathToTitle = selfExtractConfig["path_to_title"] == "" ? "" : selfExtractConfig["path_to_title"].split('.');
+    final pathToContent = selfExtractConfig["path_to_content"].split('.');
+    final defaultContent = selfExtractConfig["default_content"];
+
+    dynamic jsonData;
+    try {
+      jsonData = jsonDecode(jsonResponse);
+    } catch (e) {
+      throw FormatException("Invalid JSON format: $e");
+    }
+
+    dynamic extractedTitle = jsonData;
+
+    if (pathToTitle != ""){
+      try {
+        for (final key in pathToTitle) {
+          if (key.contains('[') && key.contains(']')) {
+            // 处理数组索引
+            final parts = key.split(RegExp(r'\[|\]'));
+            final arrayKey = parts[0];
+            final index = int.parse(parts[1]);
+            extractedTitle = extractedTitle[arrayKey][index];
+          } else {
+            extractedTitle = extractedTitle[key];
+          }
+
+          if (extractedTitle == null) {
+            extractedTitle = defaultContent;
+            break;
+          }
+        }
+      } catch (e) {
+        extractedTitle = defaultContent;
+      }
+    } else {
+      extractedTitle = "无标题";
+    }
+
+    dynamic extractedContent = jsonData;
+
+    try {
+      for (final key in pathToContent) {
+        if (key.contains('[') && key.contains(']')) {
+          // 处理数组索引
+          final parts = key.split(RegExp(r'\[|\]'));
+          final arrayKey = parts[0];
+          final index = int.parse(parts[1]);
+          extractedContent = extractedContent[arrayKey][index];
+        } else {
+          extractedContent = extractedContent[key];
+        }
+
+        if (extractedContent == null) {
+          extractedContent = defaultContent;
+          break;
+        }
+      }
+    } catch (e) {
+      extractedContent = defaultContent;
+    }
+    print("文章标题：$extractedTitle \n文章内容：$extractedContent");
+    return {
+      "title": extractedTitle,
+      "content": extractedContent,
+      "prompt": selfExtractConfig["prompt"]
+    };
   }
 
   void _loadExtractConfig(String filePath) async {

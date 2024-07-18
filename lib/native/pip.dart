@@ -44,9 +44,9 @@ class PictureInPicture {
   }
 
   ///发送数据
-  static Future<bool> addData(String text) async {
+  static Future<bool> changeData(String text) async {
     if (Platform.isIOS && inPip) {
-      _channel.invokeMethod('addData', text.fixAutoLines());
+      _channel.invokeMethod('changeData', text);
     }
     return false;
   }

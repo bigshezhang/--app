@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_proxy/network/extract_content_handler.dart';
 
+import '../native/pip.dart';
+
 class AiHandler {
   final String apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
   final String apiToken = 'sk-zzmsmzaecxwpucyffoqpgkqohxxcqdhcislcgyvappxdrujq';
@@ -33,6 +35,7 @@ class AiHandler {
     articleInfo = await extractContentHandler.extractContent(matchedURI, msg);
     articleInfo["summarizedContent"] = await summarizeText(articleInfo['content'], articleInfo["prompt"]);
     print(articleInfo["summarizedContent"]);
+    PictureInPicture.changeData(articleInfo["summarizedContent"]);
   }
   
   /// 对文字进行总结的执行器

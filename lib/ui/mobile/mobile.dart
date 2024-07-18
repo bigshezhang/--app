@@ -97,7 +97,7 @@ class MobileHomeState extends State<MobileHomePage> implements EventListener, Li
   @override
   void onRequest(Channel channel, HttpRequest request) {
     requestStateKey.currentState!.add(channel, request);
-    PictureInPicture.addData(request.requestUrl);
+    //PictureInPicture.addData(request.requestUrl);
   }
 
   @override

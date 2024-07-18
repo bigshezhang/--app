@@ -17,6 +17,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:network_proxy/native/pip.dart';
 import 'package:network_proxy/network/components/host_filter.dart';
 import 'package:network_proxy/network/components/request_rewrite_manager.dart';
 import 'package:network_proxy/network/components/script_manager.dart';
@@ -249,6 +250,8 @@ class HttpResponseProxyHandler extends ChannelHandler<HttpResponse> {
     final extractContentHandler = ExtractContentHandler();
     String? matchedURI = aiHandler.checkUrlInWhitelist(uri);
     if (matchedURI != null){
+      print("发现目标文章，进行解析总结中");
+      PictureInPicture.changeData("总结中...");
       aiHandler.summarizeHandler(matchedURI, msg.bodyAsString);
     }
 

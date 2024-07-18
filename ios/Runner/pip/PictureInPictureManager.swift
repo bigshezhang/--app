@@ -41,8 +41,8 @@ class PictureInPictureManager: NSObject,AVPictureInPictureControllerDelegate {
                 self.proxyPort = arguments?["proxyPort"] as! Int
                 self.starPiP()
                 result(Bool(true))
-            } else if ("addData" == call.method) {
-                self.pipView?.addData(text: call.arguments as! String)
+            } else if ("changeData" == call.method) {
+                self.pipView?.changeData(text: call.arguments as! String)
                 
             }
         })
@@ -138,25 +138,25 @@ class PictureInPictureManager: NSObject,AVPictureInPictureControllerDelegate {
             pipView = PictureInPictureView()
             let vc = UIHostingController(rootView: pipView)
              
-            let icon = VpnManager.shared.isRunning() ? "pause.fill" : "play.fill"
-            playButton.setImage(UIImage(systemName: icon), for: .normal)
-            playButton.addTarget(self, action: #selector(vpnAction), for: .touchUpInside)
+//            let icon = VpnManager.shared.isRunning() ? "pause.fill" : "play.fill"
+//            playButton.setImage(UIImage(systemName: icon), for: .normal)
+//            playButton.addTarget(self, action: #selector(vpnAction), for: .touchUpInside)
 
-            vc.view.addSubview(playButton)
-            playButton.snp.makeConstraints{ (make) in
-                make.left.equalTo(15)
-                make.bottom.equalTo(-13)
-            }
+//            vc.view.addSubview(playButton)
+//            playButton.snp.makeConstraints{ (make) in
+//                make.left.equalTo(15)
+//                make.bottom.equalTo(-13)
+//            }
             
-            let clearButton  = UIButton(type: .custom)
-            clearButton.setImage(UIImage(systemName: "trash.circle"), for: .normal)
-            clearButton.addTarget(self, action: #selector(cleanAction), for: .touchUpInside)
+//            let clearButton  = UIButton(type: .custom)
+//            clearButton.setImage(UIImage(systemName: "trash.circle"), for: .normal)
+//            clearButton.addTarget(self, action: #selector(cleanAction), for: .touchUpInside)
 
-            vc.view.addSubview(clearButton)
-            clearButton.snp.makeConstraints{ (make) in
-                make.right.equalTo(-13)
-                make.bottom.equalTo(-13)
-            }
+//            vc.view.addSubview(clearButton)
+//            clearButton.snp.makeConstraints{ (make) in
+//                make.right.equalTo(-13)
+//                make.bottom.equalTo(-13)
+//            }
             
             window.addSubview(vc.view!)
             // 使用自动布局
